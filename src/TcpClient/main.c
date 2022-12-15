@@ -13,21 +13,24 @@ int main(int argc, char *argv[])
 
     GSocketConnection * connection = g_socket_client_connect_to_host (client,"localhost",4000,NULL,&error);
 
-
     if (error)
     {
-        g_error(error->message);
+        //g_error(error->message);
+        g_message(error->message);
+        return FALSE;
     }
     else
     {
         g_message("Connection ok");
     }
 
+
+    GString *s = g_string_new("Hello glib.\n");
     guint8 incoming_buff[100]= {0};
 
     GInputStream * in_stream = g_io_stream_get_input_stream(G_IO_STREAM(connection));
     GOutputStream * out_stream = g_io_stream_get_output_stream(G_IO_STREAM(connection));
-    g_output_stream_write(out_stream, "Hello glib.\0", 12, NULL, &error);
+    g_output_stream_write(out_stream, s->str, s->len, NULL, &error);
     int incoming_num = g_input_stream_read(in_stream,incoming_buff,100,NULL,&error);
 
     if(error)
